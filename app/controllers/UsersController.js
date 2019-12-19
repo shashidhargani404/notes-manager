@@ -1,4 +1,5 @@
 const { User } = require('../modules/User')
+const _ = require('lodash')
 
 // user registration
 module.exports.register = (req,res) => {
@@ -18,7 +19,9 @@ module.exports.login = (req,res) => {
         .then((user) => {
             user.generateToken()
                 .then((token) => {
-                    res.send({token})
+                    const userInfo = _.pick(user, ['username', 'email'])
+                    console.log(userInfo)
+                    res.send({userInfo, token})
                 })
                 .catch((err) => {
                     res.send(err)

@@ -1,32 +1,18 @@
 import React from 'react';
 import CategoryForm from './CategoryForm';
-import Axios from 'axios';
+import { connect } from 'react-redux'
+import { startAddCategory } from '../../actions/categories'
 
-export default class CategoryNew extends React.Component {
-    handleSubmit = (formData) => {
-        Axios.post('http://localhost:3020/categories', formData, {
-            headers: {
-                'x-auth': localStorage.getItem('x-auth')
-            }
-        })
-            .then((response) => {
-                if(response.data.name === 'JsonWebTokenError'){
-                    window.alert(response.data.message)
-                } else {
-                    window.alert('Successfully added')
-                    this.props.history.push('/categories')
-                }
-            })
-            .catch((err) => {
-                window.alert(err)
-            })
+function CategoryNew(props) {
+    const handleSubmit = (formData) => {
+        props.dispatch(startAddCategory(formData, props))
     }
-    render(){
-        return (
-            <React.Fragment>
-                <h2>Add new category</h2>
-                <CategoryForm handleSubmit={this.handleSubmit} />
-            </React.Fragment>
-        )
-    }
+    return (
+        <React.Fragment>
+            <h2>Add new category</h2>
+            <CategoryForm handleSubmit={handleSubmit} />
+        </React.Fragment>
+    )
 }
+
+export default connect()(CategoryNew)

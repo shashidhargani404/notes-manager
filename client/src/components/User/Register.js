@@ -1,7 +1,8 @@
 import React from 'react';
-import Axios from 'axios';
+import { connect } from 'react-redux'
+import { startRegisterUser } from '../../actions/user'
 
-export default class Register extends React.Component {
+class Register extends React.Component {
     constructor(props){
         super(props)
         this.state = {
@@ -17,21 +18,7 @@ export default class Register extends React.Component {
             email: this.state.email,
             password: this.state.password
         }
-        Axios.post('http://localhost:3020/user/register', formData)
-            .then((response) => {
-                const data = response.data
-                if(data.hasOwnProperty('errors')){
-                    window.alert(data.message)
-                } else if(data.hasOwnProperty('errmsg')){
-                    window.alert(data.errmsg)
-                } else {
-                    window.alert('Successfully Registered')
-                    this.props.history.push('/user/login')
-                }
-            })
-            .catch((err) => {
-                window.alert(err)
-            })
+        this.props.dispatch(startRegisterUser(formData, this.props))
     }
     handleChange = (e) => {
         this.setState({
@@ -61,3 +48,5 @@ export default class Register extends React.Component {
         )
     }
 }
+
+export default connect()(Register)

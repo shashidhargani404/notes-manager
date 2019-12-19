@@ -1,6 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import configureStore from './store/configureStore'
+import { Provider } from 'react-redux'
+import { startSetCategories } from './actions/categories';
+import { startSetNotes } from './actions/notes';
+
+const store = configureStore()
+
+if(localStorage.getItem('x-auth')){
+    store.dispatch(startSetCategories())
+    store.dispatch(startSetNotes())
+}
+
+// store.subscribe(() => {
+//     console.log(store.getState())
+// })
+
+const ele = (
+    <Provider store={store}>
+        <App />
+    </Provider>
+)
+
+ReactDOM.render(ele, document.getElementById('root'));

@@ -1,7 +1,8 @@
 import React from 'react';
-import Axios from 'axios';
+import { connect } from 'react-redux'
+import { startSetUser } from '../../actions/user'
 
-export default class Login extends React.Component {
+class Login extends React.Component {
     constructor(props){
         super(props)
         this.state = {
@@ -15,19 +16,7 @@ export default class Login extends React.Component {
             email: this.state.email,
             password: this.state.password
         }
-        Axios.post('http://localhost:3020/user/login', formData)
-            .then((response) => {
-                const data = response.data
-                if(data.token){
-                    localStorage.setItem('x-auth', data.token)
-                    this.props.history.push('/')
-                } else {
-                    window.alert(data)
-                }
-            })
-            .catch((err) => {
-                window.alert(err)
-            })
+        this.props.dispatch(startSetUser(formData, this.props))
     }
     handleChange = (e) => {
         this.setState({
@@ -53,3 +42,5 @@ export default class Login extends React.Component {
         )
     }
 }
+
+export default connect()(Login)

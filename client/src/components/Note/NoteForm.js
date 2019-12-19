@@ -1,33 +1,15 @@
 import React from 'react';
-import Axios from 'axios';
+import { connect } from 'react-redux'
 
-export default class NoteForm extends React.Component {
+class NoteForm extends React.Component {
     constructor(props){
         super(props)
         this.state = {
             title: this.props.title || '',
             body: this.props.body || '',
             category: this.props.category ? this.props.category._id : '',
-            categories: []
+            categories: props.categories || []
         }
-    }
-    componentDidMount(){
-        Axios.get('http://localhost:3020/categories', {
-            headers: {
-                'x-auth': localStorage.getItem('x-auth')
-            }
-        })
-            .then((response) => {
-                if(response.data.name === 'JsonWebTokenError'){
-                    window.alert(response.data.message)
-                } else {
-                    const categories = response.data
-                    this.setState({categories})
-                }
-            })
-            .catch((err) => {
-                window.alert(err)
-            })
     }
     handleSubmit = (e) => {
         e.preventDefault()
@@ -73,3 +55,11 @@ export default class NoteForm extends React.Component {
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        categories: state.categories
+    }
+}
+
+export default connect(mapStateToProps)(NoteForm)

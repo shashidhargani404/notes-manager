@@ -1,24 +1,24 @@
 import axios from '../config/axios'
 
-export const setCategories = (categories) => {
+export const setNotes = (notes) => {
     return {
-        type: 'SET_CATEGORIES',
-        payload: categories
+        type: 'SET_NOTES',
+        payload: notes
     }
 }
 
-export const startSetCategories = () => {
+export const startSetNotes = () => {
     return (dispatch) => {
-        axios.get('/categories', {
+        axios.get('/notes', {
             headers: {
                 'x-auth': localStorage.getItem('x-auth')
             }
         })
             .then((response) => {
-                if(response.data.name === 'JsonWebTokenError'){
+                if(response.data.name === "JsonWebTokenError"){
                     window.alert(response.data.message)
                 } else {
-                    dispatch(setCategories(response.data))
+                    dispatch(setNotes(response.data))
                 }
             })
             .catch((err) => {
@@ -27,45 +27,16 @@ export const startSetCategories = () => {
     }
 }
 
-export const addCategory = (formData) => {
+export const addNOte = (formData) => {
     return {
-        type: 'ADD_CATEGORY',
-        payload: formData
-    }
-} 
-
-export const startAddCategory = (formData, props) => {
-    return (dispatch) => {
-        axios.post('/categories', formData, {
-            headers: {
-                'x-auth': localStorage.getItem('x-auth')
-            }
-        })
-            .then((response) => {
-                if(response.data.name === 'JsonWebTokenError'){
-                    window.alert(response.data.message)
-                } else {
-                    window.alert('Successfully added')
-                    dispatch(addCategory(response.data))
-                    props.history.push('/categories')
-                }
-            })
-            .catch((err) => {
-                window.alert(err)
-            })
-    }
-}
-
-export const updateCategory = (formData) => {
-    return {
-        type: 'UPDATE_CATEGORY',
+        type: 'ADD_NOTE',
         payload: formData
     }
 }
 
-export const startUpdateCategory = (formData, props) => {
+export const startAddNote = (formData, props) => {
     return (dispatch) => {
-        axios.put(`/categories/${props.match.params.id}`, formData, {
+        axios.post('/notes', formData, {
             headers: {
                 'x-auth': localStorage.getItem('x-auth')
             }
@@ -74,9 +45,9 @@ export const startUpdateCategory = (formData, props) => {
                 if(response.data.name === 'JsonWebTokenError'){
                     window.alert(response.data.message)
                 } else {
-                    window.alert('Successfully updated')
-                    dispatch(updateCategory(response.data))
-                    props.history.push('/categories')
+                    window.alert('successfully created')
+                    dispatch(addNOte(response.data))
+                    props.history.push('/notes')
                 }
             })
             .catch((err) => {
@@ -85,16 +56,45 @@ export const startUpdateCategory = (formData, props) => {
     }
 }
 
-export const removeCategory = (id) => {
+export const updateNote = (formData) => {
     return {
-        type: 'REMOVE_CATEGORY',
+        type: 'UPDATE_NOTE',
+        payload: formData
+    }
+}
+
+export const startUpdateNote = (formData, props) => {
+    return (dispatch) => {
+        axios.put(`/notes/${props.match.params.id}`, formData, {
+            headers: {
+                'x-auth': localStorage.getItem('x-auth')
+            }
+        })
+            .then((response) => {
+                if(response.data.name === 'JsonWebTokenError'){
+                    window.alert(response.data.message)
+                } else {
+                    window.alert('successfully created')
+                    dispatch(updateNote(response.data))
+                    props.history.push('/notes')
+                }
+            })
+            .catch((err) => {
+                window.alert(err)
+            })
+    }
+}
+
+export const removeNote = (id) => {
+    return {
+        type: 'REMOVE_NOTE',
         payload: id
     }
 }
 
-export const startRemoveCategory = (id) => {
+export const startRemoveNote = (id) => {
     return (dispatch) => {
-        axios.delete(`/categories/${id}`, {
+        axios.delete(`/notes/${id}`, {
             headers: {
                 'x-auth': localStorage.getItem('x-auth')
             }
@@ -103,8 +103,8 @@ export const startRemoveCategory = (id) => {
                 if(response.data.name === 'JsonWebTokenError'){
                     window.alert(response.data.message)
                 } else {
-                    window.alert('Successfully deleted')
-                    dispatch(removeCategory(id))
+                    window.alert('Successfully Removed')
+                    dispatch(removeNote(id))
                 }
             })
             .catch((err) => {
